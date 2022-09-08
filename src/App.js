@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Article from './Article'
+import data from './data'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const getStorageTheme = () => {
+  let theme = 'white-theme'
+  if (localStorage.getItem('theme')) {
+    theme = localStorage.getItem('theme')
+  }
+  return theme
 }
 
-export default App;
+const App = () => {
+  const [theme, setTheme] = React.useState(getStorageTheme())
+
+  const toggleTheme = () => {
+    if (theme === 'white-theme') {
+      setTheme('dark-theme')
+    } else {
+      setTheme('white-theme')
+    }
+  }
+  // document.documentElement.className it will get class
+  React.useEffect(() => {
+    document.documentElement.className = theme
+    localStorage.setItem('theme', theme)
+  }, [theme])
+  return (
+    <main>
+      <nav className="nav-center">
+        <h1>Dark&white</h1>
+        <button className="btn" onClick={toggleTheme}>
+          Toggle
+        </button>
+      </nav>
+      <section className="articles">
+        {data.map((item) => {
+          return <Article key={item.id} {...item} />
+        })}
+      </section>
+    </main>
+  )
+}
+
+export default App
